@@ -35,10 +35,10 @@ namespace Notebook
         {
             richTextBox1.ForeColor = Color.White;
             richTextBox1.BackColor = Color.DimGray;
-            menuStrip1.BackColor= Color.DimGray;
+            menuStrip1.BackColor = Color.DimGray;
             menuStrip1.ForeColor = Color.White;
 
-        
+
         }
 
         private void WhiteToolStripMenuItem_Click(object sender, EventArgs e)
@@ -86,7 +86,7 @@ namespace Notebook
             Sdialog.Filter = "all(*.*) |*.*";
             if (Sdialog.ShowDialog() == DialogResult.OK)
             {
-                File.WriteAllText(Sdialog.FileName, richTextBox1.Text); 
+                File.WriteAllText(Sdialog.FileName, richTextBox1.Text);
                 _openFile = Sdialog.FileName;
             }
         }
@@ -106,10 +106,10 @@ namespace Notebook
 
         private void SealToolStripMenuItem_Click(object sender, EventArgs e)
         {
-           PrintDocument pDocument = new PrintDocument();
+            PrintDocument pDocument = new PrintDocument();
             pDocument.PrintPage += PrintPageH;
             PrintDialog pDialog = new PrintDialog();
-            pDialog.Document= pDocument;
+            pDialog.Document = pDocument;
             if (pDialog.ShowDialog() == DialogResult.OK)
             {
                 pDialog.Document.Print();
@@ -132,6 +132,46 @@ namespace Notebook
         {
             richTextBox1.Text = "";
 
+        }
+
+        private void CopyToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (richTextBox1.SelectedText.Length != 0)
+            {
+                Clipboard.SetText(richTextBox1.SelectedText);
+            }
+            else
+            {
+                MessageBox.Show("Выделите текст, который хотите скопировать");
+            }
+
+        }
+
+        public void CutToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (richTextBox1.SelectedText.Length != 0)
+            {
+                Clipboard.SetText(richTextBox1.Text.Substring(richTextBox1.SelectionStart, richTextBox1.SelectionLength));
+                richTextBox1.Text = richTextBox1.Text.Remove(richTextBox1.SelectionStart, richTextBox1.SelectionLength);
+            }
+            else
+            {
+                MessageBox.Show("Выделите текст, который хотите вырезать");
+            }
+
+
+        }
+
+        private void PasteToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            richTextBox1.Text = richTextBox1.Text.Substring(0, richTextBox1.SelectionStart) + Clipboard.GetText() + richTextBox1.Text.Substring(richTextBox1.SelectionStart, richTextBox1.Text.Length - richTextBox1.SelectionStart);
+        }
+
+        protected virtual void AboutProgramToolStripMenuItem_Click(object sender, System.EventArgs e)
+        {
+
+            AboutProgram open_form = new AboutProgram();
+            open_form.Show();
         }
     }
 }
